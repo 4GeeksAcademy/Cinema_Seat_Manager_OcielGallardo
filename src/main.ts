@@ -1,12 +1,3 @@
-if (typeof document !== "undefined") {
-  import("./style.css").then(() => {
-    const app = document.querySelector<HTMLParagraphElement>("#app");
-    if (app) {
-      app.textContent = "If you can see this, Tailwind is working.";
-    }
-  });
-}
+import { runAllScenarios } from "./testScenarios";
 
-console.log("Hello from src/main.ts");
-
-export {};
+runAllScenarios();
