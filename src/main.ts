@@ -1,3 +1,10 @@
 import { runAllScenarios } from "./testScenarios";
+import { initializeWebApp } from "./webApp";
 
-runAllScenarios();
+if (typeof document !== "undefined") {
+	import("./style.css").then((): void => {
+		initializeWebApp();
+	});
+} else {
+	runAllScenarios();
+}

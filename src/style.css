@@ -1,1 +1,13 @@
 @import "tailwindcss";
+
+:root {
+	font-family: "Space Grotesk", "Avenir Next", "Segoe UI", sans-serif;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+}
