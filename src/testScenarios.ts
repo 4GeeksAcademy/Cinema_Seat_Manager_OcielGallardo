@@ -48,6 +48,17 @@ function reserveSeatBatch(cinema: number[][], seats: Array<[number, number]>): v
 }
 
 /**
+ * Marca todos los asientos con el mismo estado para preparar escenarios rapidamente.
+ */
+function fillCinema(cinema: number[][], state: 0 | 1): void {
+  for (let row: number = 0; row < cinema.length; row += 1) {
+    for (let column: number = 0; column < cinema[row].length; column += 1) {
+      cinema[row][column] = state;
+    }
+  }
+}
+
+/**
  * Ejecuta el Caso 1: sala completamente vacia.
  */
 function runCase1EmptyCinema(): void {
@@ -96,11 +107,7 @@ function runCase3AlmostFull(): void {
   console.log("CASO 3: Sala casi llena");
   const cinema: number[][] = initializeCinema();
 
-  for (let row: number = 0; row < cinema.length; row += 1) {
-    for (let column: number = 0; column < cinema[row].length; column += 1) {
-      cinema[row][column] = 1;
-    }
-  }
+  fillCinema(cinema, 1);
 
   const isolatedFreeSeats: Array<[number, number]> = [
     [0, 0],
@@ -127,11 +134,7 @@ function runCase4FullCinema(): void {
   console.log("CASO 4: Sala completamente llena");
   const cinema: number[][] = initializeCinema();
 
-  for (let row: number = 0; row < cinema.length; row += 1) {
-    for (let column: number = 0; column < cinema[row].length; column += 1) {
-      cinema[row][column] = 1;
-    }
-  }
+  fillCinema(cinema, 1);
 
   displayCinema(cinema);
   printSeatCount(countSeats(cinema));

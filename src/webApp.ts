@@ -9,6 +9,9 @@ import {
 
 const cinema: number[][] = initializeCinema();
 let highlightedPair: AdjacentSeats | null = null;
+let seatMapElement: HTMLElement | null = null;
+let summaryElement: HTMLElement | null = null;
+let statusElement: HTMLElement | null = null;
 
 /**
  * Genera el HTML base de la aplicacion web del gestor de asientos.
@@ -90,8 +93,6 @@ function isSeatHighlighted(row: number, column: number): boolean {
  * Construye e imprime el mapa de asientos para que sea clickeable por fila y columna.
  */
 function renderSeatMap(): void {
-  const seatMapElement: HTMLElement | null = document.querySelector<HTMLElement>("#seat-map");
-
   if (seatMapElement === null) {
     return;
   }
@@ -141,7 +142,7 @@ function renderSeatMap(): void {
     ${rowsHtml}
   `;
 
-  const seatButtons: NodeListOf<HTMLButtonElement> = document.querySelectorAll<HTMLButtonElement>(".seat-btn");
+  const seatButtons: NodeListOf<HTMLButtonElement> = seatMapElement.querySelectorAll<HTMLButtonElement>(".seat-btn");
   seatButtons.forEach((button: HTMLButtonElement): void => {
     button.addEventListener("click", onSeatClick);
   });
@@ -151,8 +152,6 @@ function renderSeatMap(): void {
  * Actualiza el resumen de asientos ocupados y disponibles en el panel lateral.
  */
 function renderSummary(): void {
-  const summaryElement: HTMLElement | null = document.querySelector<HTMLElement>("#seat-summary");
-
   if (summaryElement === null) {
     return;
   }
@@ -169,8 +168,6 @@ function renderSummary(): void {
  * Escribe mensajes de estado visibles para guiar a quien use la interfaz.
  */
 function setStatusMessage(message: string): void {
-  const statusElement: HTMLElement | null = document.querySelector<HTMLElement>("#status-message");
-
   if (statusElement === null) {
     return;
   }
@@ -182,11 +179,7 @@ function setStatusMessage(message: string): void {
  * Maneja el click sobre un asiento libre para intentar reservarlo.
  */
 function onSeatClick(event: Event): void {
-  const buttonElement: HTMLButtonElement | null = event.currentTarget as HTMLButtonElement;
-
-  if (buttonElement === null) {
-    return;
-  }
+  const buttonElement: HTMLButtonElement = event.currentTarget as HTMLButtonElement;
 
   const rowValue: string | undefined = buttonElement.dataset.row;
   const columnValue: string | undefined = buttonElement.dataset.column;
@@ -207,8 +200,7 @@ function onSeatClick(event: Event): void {
     setStatusMessage(`No fue posible reservar la fila ${row}, columna ${column}.`);
   }
 
-  renderSeatMap();
-  renderSummary();
+  renderUI();
 }
 
 /**
@@ -231,6 +223,14 @@ function suggestAdjacentSeats(): void {
 }
 
 /**
+ * Re-renderiza los bloques visuales que dependen del estado de asientos.
+ */
+function renderUI(): void {
+  renderSeatMap();
+  renderSummary();
+}
+
+/**
  * Inicializa la interfaz web y conecta todos los eventos de la aplicacion.
  */
 export function initializeWebApp(): void {
@@ -243,12 +243,15 @@ export function initializeWebApp(): void {
 
   appContainer.innerHTML = createAppTemplate();
 
-  const adjacentButton: HTMLButtonElement | null = document.querySelector<HTMLButtonElement>("#adjacent-button");
+  seatMapElement = appContainer.querySelector<HTMLElement>("#seat-map");
+  summaryElement = appContainer.querySelector<HTMLElement>("#seat-summary");
+  statusElement = appContainer.querySelector<HTMLElement>("#status-message");
+
+  const adjacentButton: HTMLButtonElement | null = appContainer.querySelector<HTMLButtonElement>("#adjacent-button");
   if (adjacentButton !== null) {
     adjacentButton.addEventListener("click", suggestAdjacentSeats);
   }
 
   setStatusMessage("Selecciona un asiento libre para realizar una reserva.");
-  renderSeatMap();
-  renderSummary();
+  renderUI();
 }

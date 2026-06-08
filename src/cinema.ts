@@ -18,19 +18,7 @@ const TOTAL_COLUMNS: number = 10;
  * Crea la matriz de asientos de la sala con todos los lugares disponibles.
  */
 export function initializeCinema(): number[][] {
-  const cinema: number[][] = [];
-
-  for (let row: number = 0; row < TOTAL_ROWS; row += 1) {
-    const seatsRow: number[] = [];
-
-    for (let column: number = 0; column < TOTAL_COLUMNS; column += 1) {
-      seatsRow.push(0);
-    }
-
-    cinema.push(seatsRow);
-  }
-
-  return cinema;
+  return Array.from({ length: TOTAL_ROWS }, (): number[] => Array(TOTAL_COLUMNS).fill(0));
 }
 
 /**
@@ -58,19 +46,10 @@ export function displayCinema(cinema: number[][]): void {
  * Verifica si una posición está dentro de los límites de la sala.
  */
 function isValidSeatPosition(cinema: number[][], row: number, column: number): boolean {
-  if (row < 0 || column < 0) {
-    return false;
-  }
-
-  if (row >= cinema.length) {
-    return false;
-  }
-
-  if (column >= cinema[row].length) {
-    return false;
-  }
-
-  return true;
+  return row >= 0
+    && column >= 0
+    && row < cinema.length
+    && column < cinema[row].length;
 }
 
 /**
@@ -96,15 +75,13 @@ export function reserveSeat(cinema: number[][], row: number, column: number): bo
  * Cuenta cuántos asientos están ocupados y cuántos quedan disponibles.
  */
 export function countSeats(cinema: number[][]): SeatCount {
-  let occupied: number = 0;
-
-  for (let row: number = 0; row < cinema.length; row += 1) {
-    for (let column: number = 0; column < cinema[row].length; column += 1) {
-      if (cinema[row][column] === 1) {
-        occupied += 1;
-      }
-    }
-  }
+  const occupied: number = cinema.reduce((total: number, row: number[]): number => {
+    const occupiedInRow: number = row.reduce(
+      (rowTotal: number, seat: number): number => rowTotal + (seat === 1 ? 1 : 0),
+      0,
+    );
+    return total + occupiedInRow;
+  }, 0);
 
   const totalSeats: number = cinema.length * (cinema[0]?.length ?? 0);
   const available: number = totalSeats - occupied;
@@ -117,9 +94,11 @@ export function countSeats(cinema: number[][]): SeatCount {
  */
 export function findAdjacentSeats(cinema: number[][]): AdjacentSeats | null {
   for (let row: number = 0; row < cinema.length; row += 1) {
-    for (let column: number = 0; column < cinema[row].length - 1; column += 1) {
-      const currentSeat: SeatState = cinema[row][column] as SeatState;
-      const nextSeat: SeatState = cinema[row][column + 1] as SeatState;
+    const currentRow: number[] = cinema[row];
+
+    for (let column: number = 0; column < currentRow.length - 1; column += 1) {
+      const currentSeat: SeatState = currentRow[column] as SeatState;
+      const nextSeat: SeatState = currentRow[column + 1] as SeatState;
 
       if (currentSeat === 0 && nextSeat === 0) {
         return {
