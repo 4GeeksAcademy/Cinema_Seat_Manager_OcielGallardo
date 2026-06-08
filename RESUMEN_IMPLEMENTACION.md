@@ -231,3 +231,27 @@ Se entrego un gestor de asientos completo con:
 - Pruebas automaticas por escenarios.
 - Interfaz web visual y usable.
 - Compatibilidad entre uso por consola y uso en navegador.
+
+---
+
+## 11. Comando rapido para abrir la app web
+
+Para abrir el programa en el navegador cuando quieras, ejecuta:
+
+```bash
+cd /workspaces/Cinema_Seat_Manager_OcielGallardo && npm run dev
+```
+
+Luego abre en tu navegador:
+
+```bash
+$BROWSER http://localhost:5173/
+```
+
+Si prefieres hacerlo en un solo comando:
+
+```bash
+cd /workspaces/Cinema_Seat_Manager_OcielGallardo && npm run dev
+# en otra terminal:
+$BROWSER http://localhost:5173/
+```
